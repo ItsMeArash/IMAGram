@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { SignupValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
 import { Link } from "react-router-dom";
+import { createUserAccount } from "@/lib/appwrite/api";
 
 const SignUpForm = () => {
     const isLoading = false;
@@ -29,8 +30,9 @@ const SignUpForm = () => {
         },
     });
 
-    const onSubmit = (values: z.infer<typeof SignupValidation>) => {
-        console.log(values);
+    const onSubmit = async (values: z.infer<typeof SignupValidation>) => {
+        const newUser = await createUserAccount(values);
+        console.log(newUser);
     };
 
     return (
@@ -118,15 +120,22 @@ const SignUpForm = () => {
                     />
                     <Button type="submit" className="shad-button_primary">
                         {isLoading ? (
-                          <div className="flex-center gap-2">
-                            <Loader /> Loading...
-                          </div>
-                        ) : "Sign up"}
+                            <div className="flex-center gap-2">
+                                <Loader /> Loading...
+                            </div>
+                        ) : (
+                            "Sign up"
+                        )}
                     </Button>
 
                     <p className="text-small-regular text-light-2 text-center mt-2">
-                          Already have an account?
-                          <Link to='/sign-in' className="text-primary-500 text-small-semibold ml-1">Log in</Link>
+                        Already have an account?
+                        <Link
+                            to="/sign-in"
+                            className="text-primary-500 text-small-semibold ml-1"
+                        >
+                            Log in
+                        </Link>
                     </p>
                 </form>
             </div>
